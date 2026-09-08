@@ -7,138 +7,124 @@
 </head>
 <body>
   <header>
-    <h1>DyslexAid</h1>
-    <p class="tagline">Make this page easier to read</p>
+    <div>
+      <h1>DyslexAid</h1>
+      <p class="tagline">Make this page easier to read</p>
+    </div>
+    <span class="count" id="count" aria-live="polite">Nothing on</span>
+    <button id="options" class="header-button" data-help="Opens the settings page: bionic boldness, tint color, ruler height, read-aloud speed, and the list of paused sites.">Settings</button>
   </header>
 
-  <label class="row site-row" id="site-row" hidden>
-    <span class="emoji" aria-hidden="true">🌐</span>
-    <span class="text">
-      <span class="name">On this site</span>
-      <span class="desc" id="site-host"></span>
-    </span>
-    <input type="checkbox" id="site-toggle">
-    <span class="switch"></span>
-  </label>
+  <div class="layout">
+    <aside class="left">
+      <section class="card preview" id="preview" aria-label="Preview of your current settings">
+        <p id="preview-text"></p>
+      </section>
 
-  <main id="toggles">
-    <label class="row">
-      <span class="emoji" aria-hidden="true">🔤</span>
-      <span class="text">
-        <span class="name">Friendly font</span>
-        <span class="desc">Rounded letters, wider spacing</span>
-      </span>
-      <input type="checkbox" data-feature="font">
-      <span class="switch"></span>
-    </label>
+      <section class="card" aria-labelledby="presets-title">
+        <h2 id="presets-title">Quick start</h2>
+        <div class="presets">
+          <button data-preset="dyslexia" data-help="Dyslexia preset: friendly font, comfy spacing, bionic reading, and a soft tint. A good first thing to try.">Dyslexia</button>
+          <button data-preset="focus" data-help="Focus preset for ADHD: reading ruler, calm mode, and faded images, so the page holds still and you keep your place.">Focus</button>
+          <button data-preset="vision" data-help="Low vision preset: bigger text, comfy spacing, underlined links, and the reading ruler.">Low vision</button>
+          <button data-preset="off" data-help="Turns every feature off and sets text size back to normal. Your settings page choices stay as they are.">All off</button>
+        </div>
+      </section>
 
-    <label class="row">
-      <span class="emoji" aria-hidden="true">📏</span>
-      <span class="text">
-        <span class="name">Comfy spacing</span>
-        <span class="desc">Taller lines, shorter paragraphs</span>
-      </span>
-      <input type="checkbox" data-feature="spacing">
-      <span class="switch"></span>
-    </label>
+      <button class="speak" id="speak" data-help="Reads the text you selected out loud, or the whole article if nothing is selected. Press again, or click the button that appears on the page, to stop.">
+        <span aria-hidden="true">🔊</span> Read aloud
+      </button>
 
-    <label class="row">
-      <span class="emoji" aria-hidden="true">⚡</span>
-      <span class="text">
-        <span class="name">Bionic reading</span>
-        <span class="desc">Bold word-starts guide your eye</span>
-      </span>
-      <input type="checkbox" data-feature="bionic">
-      <span class="switch"></span>
-    </label>
+      <p id="help" role="status">Hover over or tab to anything here to see what it does and who it helps.</p>
 
-    <label class="row">
-      <span class="emoji" aria-hidden="true">🖍️</span>
-      <span class="text">
-        <span class="name">Reading ruler</span>
-        <span class="desc">A highlight bar follows your cursor</span>
-      </span>
-      <input type="checkbox" data-feature="ruler">
-      <span class="switch"></span>
-    </label>
+      <label class="card control site-row" id="site-row" hidden data-help="Turns DyslexAid off just for this website, without changing any of your settings.">
+        <span class="icon" aria-hidden="true">🌐</span>
+        <span class="text">
+          <span class="name">On this site</span>
+          <span class="desc" id="site-host"></span>
+        </span>
+        <input type="checkbox" id="site-toggle">
+        <span class="switch"></span>
+      </label>
 
-    <label class="row">
-      <span class="emoji" aria-hidden="true">🎯</span>
-      <span class="text">
-        <span class="name">Line focus</span>
-        <span class="desc">Dims everything but your line</span>
-      </span>
-      <input type="checkbox" data-feature="focus">
-      <span class="switch"></span>
-    </label>
+      <div class="footer-buttons">
+        <button id="shortcuts" data-help="Opens Chrome's keyboard shortcut page. The defaults are Alt+Shift+R for the ruler, Alt+Shift+B for bionic reading, and Alt+Shift+S for read aloud.">Shortcuts</button>
+        <button id="reset" data-help="Clears every setting, including the settings page and paused sites. It asks for a second click first.">Reset all</button>
+      </div>
+    </aside>
 
-    <label class="row">
-      <span class="emoji" aria-hidden="true">🌅</span>
-      <span class="text">
-        <span class="name">Tint</span>
-        <span class="desc">Softer background, less glare</span>
-      </span>
-      <input type="checkbox" data-feature="tint">
-      <span class="switch"></span>
-    </label>
+    <main class="right">
+      <h2 class="group">Text</h2>
+      <label class="row" data-help="Switches the page to OpenDyslexic, a font with heavy letter bottoms that keeps b, d, p, and q from flipping. Helps with dyslexia.">
+        <span class="icon" aria-hidden="true">🔤</span>
+        <span class="text"><span class="name">Friendly font</span><span class="desc">OpenDyslexic, wider spacing</span></span>
+        <input type="checkbox" data-feature="font">
+        <span class="switch"></span>
+      </label>
+      <label class="row" data-help="Adds room between lines and paragraphs and keeps lines short, so your eye finds the next line without hunting. Helps with dyslexia and low vision.">
+        <span class="icon" aria-hidden="true">📏</span>
+        <span class="text"><span class="name">Comfy spacing</span><span class="desc">Taller lines, shorter paragraphs</span></span>
+        <input type="checkbox" data-feature="spacing">
+        <span class="switch"></span>
+      </label>
+      <label class="row" data-help="Bolds the start of each word so your eye jumps from anchor to anchor instead of reading letter by letter. Helps with dyslexia and ADHD. Boldness is adjustable in Settings.">
+        <span class="icon" aria-hidden="true">⚡</span>
+        <span class="text"><span class="name">Bionic reading</span><span class="desc">Bold word-starts guide your eye</span></span>
+        <input type="checkbox" data-feature="bionic">
+        <span class="switch"></span>
+      </label>
 
-    <label class="row">
-      <span class="emoji" aria-hidden="true">🧘</span>
-      <span class="text">
-        <span class="name">Calm mode</span>
-        <span class="desc">Freezes animations and motion</span>
-      </span>
-      <input type="checkbox" data-feature="calm">
-      <span class="switch"></span>
-    </label>
+      <div class="row zoom-row" data-help="Zooms the whole page from 100% to 160%. The popup stays the same size.">
+        <span class="icon" aria-hidden="true">🔍</span>
+        <span class="text"><span class="name" id="zoom-label">Text size</span><span class="desc">Zoom the page</span></span>
+        <span class="stepper" role="group" aria-labelledby="zoom-label">
+          <button id="zoom-down" aria-label="Smaller text">−</button>
+          <span id="zoom-value" aria-live="polite">100%</span>
+          <button id="zoom-up" aria-label="Bigger text">+</button>
+        </span>
+      </div>
 
-    <label class="row">
-      <span class="emoji" aria-hidden="true">🖼️</span>
-      <span class="text">
-        <span class="name">Hide images</span>
-        <span class="desc">Fades pictures, hover to reveal one</span>
-      </span>
-      <input type="checkbox" data-feature="images">
-      <span class="switch"></span>
-    </label>
+      <h2 class="group">Focus</h2>
+      <label class="row" data-help="A soft highlight bar follows your mouse so you never lose your line. Helps with dyslexia. Height is adjustable in Settings.">
+        <span class="icon" aria-hidden="true">🖍️</span>
+        <span class="text"><span class="name">Reading ruler</span><span class="desc">A bar follows your cursor</span></span>
+        <input type="checkbox" data-feature="ruler">
+        <span class="switch"></span>
+      </label>
+      <label class="row" data-help="Dims everything except a band around your mouse. A stronger version of the ruler. Helps with ADHD.">
+        <span class="icon" aria-hidden="true">🎯</span>
+        <span class="text"><span class="name">Line focus</span><span class="desc">Dims all but your line</span></span>
+        <input type="checkbox" data-feature="focus">
+        <span class="switch"></span>
+      </label>
+      <label class="row" data-help="Stops animations and moving parts on the page. Helps with ADHD, migraines, and motion sickness.">
+        <span class="icon" aria-hidden="true">🧘</span>
+        <span class="text"><span class="name">Calm mode</span><span class="desc">Freezes animations and motion</span></span>
+        <input type="checkbox" data-feature="calm">
+        <span class="switch"></span>
+      </label>
+      <label class="row" data-help="Fades pictures and videos so the text stands alone. Move your mouse over one to see it. Helps with ADHD.">
+        <span class="icon" aria-hidden="true">🖼️</span>
+        <span class="text"><span class="name">Hide images</span><span class="desc">Fades pictures, hover to reveal</span></span>
+        <input type="checkbox" data-feature="images">
+        <span class="switch"></span>
+      </label>
 
-    <label class="row">
-      <span class="emoji" aria-hidden="true">🔗</span>
-      <span class="text">
-        <span class="name">Underline links</span>
-        <span class="desc">Restores removed underlines</span>
-      </span>
-      <input type="checkbox" data-feature="links">
-      <span class="switch"></span>
-    </label>
-
-    <div class="row zoom-row">
-      <span class="emoji" aria-hidden="true">🔍</span>
-      <span class="text">
-        <span class="name" id="zoom-label">Text size</span>
-        <span class="desc">Zoom the page</span>
-      </span>
-      <span class="stepper" role="group" aria-labelledby="zoom-label">
-        <button id="zoom-down" aria-label="Smaller text">−</button>
-        <span id="zoom-value" aria-live="polite">100%</span>
-        <button id="zoom-up" aria-label="Bigger text">+</button>
-      </span>
-    </div>
-
-    <button class="row action" id="speak">
-      <span class="emoji" aria-hidden="true">🔊</span>
-      <span class="text">
-        <span class="name">Read aloud</span>
-        <span class="desc">Reads your selection, or the whole article</span>
-      </span>
-    </button>
-  </main>
-
-  <footer>
-    <button id="shortcuts">Shortcuts</button>
-    <button id="options">Settings</button>
-    <button id="reset">Reset all</button>
-  </footer>
+      <h2 class="group">Page</h2>
+      <label class="row" data-help="Softens a bright white background with a cream, blue, yellow, or green tint. Pick the color in Settings. Helps with glare and visual stress. Dark pages are left alone.">
+        <span class="icon" aria-hidden="true">🌅</span>
+        <span class="text"><span class="name">Tint</span><span class="desc">Softer background, less glare</span></span>
+        <input type="checkbox" data-feature="tint">
+        <span class="switch"></span>
+      </label>
+      <label class="row" data-help="Puts underlines back on links that rely on color alone. Helps with low vision and color blindness.">
+        <span class="icon" aria-hidden="true">🔗</span>
+        <span class="text"><span class="name">Underline links</span><span class="desc">Restores removed underlines</span></span>
+        <input type="checkbox" data-feature="links">
+        <span class="switch"></span>
+      </label>
+    </main>
+  </div>
   <script src="popup.js"></script>
 </body>
 </html>

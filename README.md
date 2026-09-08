@@ -19,9 +19,18 @@ Keyboard shortcuts: **Alt+Shift+R** toggles the ruler, **Alt+Shift+B**
 toggles bionic reading, and **Alt+Shift+S** starts or stops read aloud. All
 three can be changed at `chrome://extensions/shortcuts`.
 
-The Settings link in the popup opens a page for the finer knobs: bionic
-boldness, tint color (cream, blue, yellow, or green), ruler height,
-read-aloud speed, and the list of paused sites.
+The popup is built so you do not have to know what any of this means before
+you start. Four quick-start buttons (Dyslexia, Focus, Low vision, All off)
+turn on a sensible bundle in one click, and the one that matches your
+current toggles lights up. A preview sentence at the top changes as you flip
+switches, so you can see the font, spacing, bolding, tint, and underlines
+before you look at the page. Hover over or tab to anything and a panel in
+the corner explains what it does and who it tends to help. A badge in the
+header counts how many features are on.
+
+The Settings button opens a page for the finer knobs: bionic boldness, tint
+color (cream, blue, yellow, or green), ruler height, read-aloud speed, and
+the list of paused sites.
 
 Settings are saved with `chrome.storage.sync`, so they persist across pages,
 restarts, and your other Chrome installs.
@@ -68,10 +77,13 @@ page so you can see it is on and stop it with a click.
 The popup and settings page were built for the same readers as the
 features. Every text and control color was measured against WCAG AA
 (4.5:1 for text, 3:1 for controls), the toggles show a check mark so on and
-off are not told apart by color alone, type starts at 15px, everything works
-by keyboard with visible focus rings, switch animations turn off when your
-system asks for reduced motion, and if you turn on the friendly font, the
-popup uses it too.
+off are not told apart by color alone, everything works by keyboard with
+visible focus rings, the help panel is a live region so screen readers hear
+it, switch animations turn off when your system asks for reduced motion,
+and if you turn on the friendly font, the settings page uses it too. The
+popup itself stays in the system font, because OpenDyslexic's wide letters
+would push it past Chrome's 600px popup limit and force scrolling; the
+preview card is where you see the font instead.
 
 A few smaller details: the warm tint measures the page's background luminance
 and leaves dark-themed pages alone, since sepia over near-black just looks muddy; every
