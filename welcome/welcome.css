@@ -1,0 +1,87 @@
+/* Welcome page. Same palette as the popup, checked against WCAG AA.
+   content.css is loaded too, so the user's settings restyle this page
+   the same way they restyle any article. */
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.5;
+  color: #2b2b2b;
+  background: #fffaf0;
+}
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 32px 40px;
+  background: linear-gradient(135deg, #b84a18, #963a15);
+  color: #fff;
+}
+.hero h1 { margin: 0 0 4px; font-size: 28px; }
+.hero p { margin: 0; font-size: 17px; max-width: 560px; }
+
+main { max-width: 760px; margin: 0 auto; padding: 16px 24px 48px; }
+section { margin-top: 34px; }
+h2 { font-size: 20px; margin: 0 0 12px; }
+
+.preset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.preset-grid button {
+  text-align: left;
+  padding: 14px 16px;
+  border: 2px solid #8c8170;
+  border-radius: 12px;
+  background: #fff;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+.preset-grid button:hover { background: #fff0d6; border-color: #9a4416; }
+.preset-grid button[aria-pressed="true"] { background: #b84a18; border-color: #b84a18; color: #fff; }
+.preset-name { display: block; font-weight: 700; font-size: 18px; }
+.preset-desc { display: block; font-size: 15px; margin-top: 3px; }
+.status { min-height: 1.5em; margin: 10px 0 0; font-weight: 600; color: #9a4416; }
+
+.sample { padding: 22px 24px; background: #fff; border: 1px solid #e3d3b3; border-radius: 12px; }
+.sample p { margin: 0 0 14px; }
+.sample a { color: #1a4fa3; text-decoration: none; }
+.speak {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  background: #b84a18;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.speak:hover { background: #963a15; }
+
+.steps ol { padding-left: 22px; margin: 0; }
+.steps li { margin-bottom: 10px; }
+
+footer {
+  margin-top: 40px;
+  padding-top: 18px;
+  border-top: 1px solid #e3d3b3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 20px;
+  font-size: 15px;
+}
+footer button, footer a {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  color: #9a4416;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.privacy { color: #5c5346; }
+
+button:focus-visible, a:focus-visible { outline: 3px solid #9a4416; outline-offset: 3px; }
+@media (max-width: 600px) { .preset-grid { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }

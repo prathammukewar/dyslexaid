@@ -75,5 +75,9 @@ $("#tts-rate").addEventListener("change", (e) => {
   chrome.storage.sync.set({ ttsRate: parseFloat(e.target.value) });
 });
 
+$("#open-welcome").addEventListener("click", () => {
+  chrome.tabs.create({ url: chrome.runtime.getURL("welcome/welcome.html") });
+});
+
 render();
 chrome.storage.onChanged.addListener(render);

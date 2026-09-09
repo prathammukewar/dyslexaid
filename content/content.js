@@ -29,7 +29,7 @@ let settings = { ...DEFAULTS };
 
 /* ---------- applying settings ----------
    Most features are one attribute flip; content.css does the
-   rest. Bionic, the ruler, and line focus have JS components. */
+   rest. Bold word starts, the ruler, and line focus have JS components. */
 function applySetting(feature, on) {
   if (on) {
     root.setAttribute(`data-dyslexaid-${feature}`, "on");
@@ -96,7 +96,7 @@ refresh(); // apply saved settings on page load
 chrome.storage.onChanged.addListener(refresh); // react to popup/options/shortcuts
 
 /* ============================================================
-   Bionic reading.
+   Bold word starts.
    Wrap the first part of each word (settings.bionicStrength of
    its length) in <b class="dyslexaid-bionic">. A TreeWalker
    visits only text nodes, skipping anything unsafe to rewrite.
@@ -203,10 +203,14 @@ function stopBionic() {
 /* ============================================================
    Reading ruler: a soft band that follows the cursor.
    Line focus: the inverse, everything BUT the band is dimmed.
-   Both are fixed elements moved on mousemove.
+   Both are fixed elements that share one vertical position, moved by
+   the mouse or nudged with Alt+Up and Alt+Down for people who read
+   without a mouse.
    ============================================================ */
 let rulerEl = null;
 let focusEl = null;
+let bandY = null; // viewport y of the band's center; null until placed
+let bandListenersOn = false;
 
 function makeOverlay(id) {
   const el = document.createElement("div");
@@ -215,28 +219,63 @@ function makeOverlay(id) {
   return el;
 }
 
-function moveRuler(e) {
-  if (rulerEl) rulerEl.style.top = e.clientY - rulerEl.offsetHeight / 2 + "px";
+function placeBands() {
+  if (bandY === null) bandY = window.innerHeight / 2;
+  for (const el of [rulerEl, focusEl]) {
+    if (el) el.style.top = bandY - el.offsetHeight / 2 + "px";
+  }
 }
-function moveFocus(e) {
-  if (focusEl) focusEl.style.top = e.clientY - focusEl.offsetHeight / 2 + "px";
+
+function moveBands(e) {
+  bandY = e.clientY;
+  placeBands();
+}
+
+function nudgeBands(e) {
+  if (!e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+  if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
+  const t = e.target;
+  if (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
+  if (bandY === null) bandY = window.innerHeight / 2;
+  const step = Math.max(24, settings.rulerHeight);
+  bandY += e.key === "ArrowDown" ? step : -step;
+  bandY = Math.max(0, Math.min(window.innerHeight, bandY));
+  placeBands();
+  e.preventDefault();
+}
+
+function updateBandListeners() {
+  const wanted =
+    root.hasAttribute("data-dyslexaid-ruler") ||
+    root.hasAttribute("data-dyslexaid-focus");
+  if (wanted && !bandListenersOn) {
+    document.addEventListener("mousemove", moveBands, { passive: true });
+    document.addEventListener("keydown", nudgeBands);
+    bandListenersOn = true;
+  } else if (!wanted && bandListenersOn) {
+    document.removeEventListener("mousemove", moveBands);
+    document.removeEventListener("keydown", nudgeBands);
+    bandListenersOn = false;
+  }
 }
 
 function startRuler() {
   if (!rulerEl) rulerEl = makeOverlay("dyslexaid-ruler");
   rulerEl.style.height = settings.rulerHeight + "px";
-  document.addEventListener("mousemove", moveRuler, { passive: true });
+  placeBands();
+  updateBandListeners();
 }
 function stopRuler() {
-  document.removeEventListener("mousemove", moveRuler);
+  updateBandListeners();
 }
 
 function startFocus() {
   if (!focusEl) focusEl = makeOverlay("dyslexaid-focus");
-  document.addEventListener("mousemove", moveFocus, { passive: true });
+  placeBands();
+  updateBandListeners();
 }
 function stopFocus() {
-  document.removeEventListener("mousemove", moveFocus);
+  updateBandListeners();
 }
 
 /* ============================================================

@@ -23,3 +23,11 @@ chrome.commands.onCommand.addListener(async (command) => {
   const saved = await chrome.storage.sync.get(feature);
   await chrome.storage.sync.set({ [feature]: !saved[feature] });
 });
+
+/* First install: open the welcome page so the person can pick a
+   preset and see it work before they ever open the popup. */
+chrome.runtime.onInstalled.addListener(({ reason }) => {
+  if (reason === "install") {
+    chrome.tabs.create({ url: chrome.runtime.getURL("welcome/welcome.html") });
+  }
+});

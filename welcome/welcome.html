@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Welcome to DyslexAid</title>
+  <link rel="stylesheet" href="../content/content.css">
+  <link rel="stylesheet" href="welcome.css">
+</head>
+<body>
+  <header class="hero">
+    <img src="../icons/icon128.png" alt="" width="64" height="64">
+    <div>
+      <h1>DyslexAid is installed</h1>
+      <p>Pick a starting point below. This page changes as you do, so you can see the effect right here.</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="presets" aria-labelledby="start-title">
+      <h2 id="start-title">Start with a preset</h2>
+      <div class="preset-grid">
+        <button data-preset="dyslexia">
+          <span class="preset-name">Dyslexia</span>
+          <span class="preset-desc">Friendly font, comfy spacing, bold word starts, and a soft tint.</span>
+        </button>
+        <button data-preset="focus">
+          <span class="preset-name">Focus</span>
+          <span class="preset-desc">Reading ruler, calm mode, and faded images, so the page holds still.</span>
+        </button>
+        <button data-preset="vision">
+          <span class="preset-name">Low vision</span>
+          <span class="preset-desc">Bigger text, comfy spacing, underlined links, and the ruler.</span>
+        </button>
+        <button data-preset="off">
+          <span class="preset-name">Nothing yet</span>
+          <span class="preset-desc">Leave everything off and pick features one at a time from the popup.</span>
+        </button>
+      </div>
+      <p class="status" id="status" role="status"></p>
+    </section>
+
+    <section class="sample">
+      <h2>A sample to read</h2>
+      <p>For readers with dyslexia, a wall of tightly packed text in a thin
+      typeface can feel like an obstacle course. Letters mirror and swap, lines
+      blur together, and by the time the eye reaches the end of a long line,
+      finding the start of the next one is a small act of navigation.</p>
+      <p>Small changes make outsized differences. Wider letter spacing keeps
+      characters from crowding. Taller line height gives each line room to
+      breathe. Bolding the first part of every word gives the eye an anchor, so
+      reading becomes a glide from anchor to anchor. A warm background softens
+      the glare that makes white screens tiring, and
+      <a href="https://opendyslexic.org">underlined links</a> are easier to
+      spot than colored ones.</p>
+      <button class="speak" id="speak"><span aria-hidden="true">🔊</span> Read this aloud</button>
+    </section>
+
+    <section class="steps">
+      <h2>Three things to know</h2>
+      <ol>
+        <li><strong>Pin the icon.</strong> Click the puzzle piece at the top right of Chrome and pin DyslexAid, so the popup is one click away on any page.</li>
+        <li><strong>Everything lives in the popup.</strong> Presets, switches, text size, and read aloud. Hover over anything there and it explains itself.</li>
+        <li><strong>Shortcuts work anywhere.</strong> Alt+Shift+R for the ruler, Alt+Shift+B for bold word starts, Alt+Shift+S to read aloud. With the ruler on, Alt+Up and Alt+Down move it without a mouse.</li>
+      </ol>
+    </section>
+
+    <footer>
+      <button id="open-options">Settings</button>
+      <button id="open-shortcuts">Change shortcuts</button>
+      <a href="https://github.com/prathammukewar/dyslexaid" target="_blank" rel="noopener">Source and feedback</a>
+      <span class="privacy">DyslexAid collects nothing and never connects to the internet.</span>
+    </footer>
+  </main>
+
+  <script src="../content/content.js"></script>
+  <script src="welcome.js"></script>
+</body>
+</html>

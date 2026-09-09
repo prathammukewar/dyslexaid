@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DyslexAid</title>
+  <meta name="description" content="A free Chrome extension that makes any page easier to read: a dyslexia-friendly font, bold word starts, a reading ruler, calm mode, read aloud, and more. No account, no tracking.">
+  <meta property="og:title" content="DyslexAid: make any page easier to read">
+  <meta property="og:description" content="Free Chrome extension for dyslexia, ADHD, and low vision. Nothing leaves your browser.">
+  <meta property="og:image" content="https://prathammukewar.github.io/dyslexaid/img/store-screenshot.png">
+  <link rel="icon" href="img/icon128.png">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, "Segoe UI", system-ui, sans-serif; font-size: 18px; line-height: 1.55; color: #2b2b2b; background: #fffaf0; }
+    a { color: #9a4416; }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 0 24px; }
+    header { background: linear-gradient(135deg, #b84a18, #963a15); color: #fff; padding: 56px 0 48px; }
+    .hero { display: grid; grid-template-columns: 1.1fr 1fr; gap: 36px; align-items: center; }
+    header h1 { font-size: 44px; margin: 0 0 8px; line-height: 1.1; }
+    header .tag { font-size: 22px; margin: 0 0 22px; }
+    header p { font-size: 18px; margin: 0 0 24px; max-width: 480px; }
+    .buttons { display: flex; flex-wrap: wrap; gap: 12px; }
+    .btn { display: inline-block; padding: 13px 20px; border-radius: 10px; font-weight: 700; text-decoration: none; font-size: 17px; }
+    .btn.primary { background: #fff; color: #9a4416; }
+    .btn.secondary { border: 2px solid rgba(255,255,255,0.8); color: #fff; }
+    .btn:hover { filter: brightness(0.95); }
+    .hero img { width: 100%; height: auto; border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.35); }
+    .brand { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+    .brand img { width: 52px; height: 52px; }
+    section { padding: 48px 0; }
+    section + section { border-top: 1px solid #e3d3b3; }
+    h2 { font-size: 30px; margin: 0 0 18px; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .card { background: #fff; border: 1px solid #e3d3b3; border-radius: 12px; padding: 18px; }
+    .card h3 { margin: 0 0 6px; font-size: 19px; }
+    .card p { margin: 0; font-size: 16px; color: #5c5346; }
+    .who { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .shot { width: 100%; height: auto; border-radius: 12px; border: 1px solid #e3d3b3; }
+    ol { padding-left: 24px; }
+    li { margin-bottom: 8px; }
+    code { background: #fff0d6; padding: 2px 6px; border-radius: 5px; font-size: 0.95em; }
+    footer { padding: 30px 0 48px; color: #5c5346; font-size: 16px; border-top: 1px solid #e3d3b3; }
+    footer a { margin-right: 18px; }
+    .note { background: #fff; border: 1px solid #e3d3b3; border-radius: 12px; padding: 18px 20px; }
+    @media (max-width: 760px) {
+      .hero, .who { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr 1fr; }
+      header h1 { font-size: 34px; }
+    }
+    @media (max-width: 520px) { .grid { grid-template-columns: 1fr; } }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+    a:focus-visible, .btn:focus-visible { outline: 3px solid #9a4416; outline-offset: 3px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap hero">
+      <div>
+        <div class="brand"><img src="img/icon128.png" alt=""><span style="font-weight:700;font-size:20px">DyslexAid</span></div>
+        <h1>Make any page easier to read.</h1>
+        <p class="tag">A free Chrome extension for dyslexia, ADHD, and low vision.</p>
+        <p>One click gives you a dyslexia-friendly font, bold word starts, a reading ruler, a calmer page, or a voice that reads it to you. Nothing leaves your browser.</p>
+        <div class="buttons">
+          <a class="btn primary" href="https://github.com/prathammukewar/dyslexaid/releases/latest">Download for Chrome</a>
+          <a class="btn secondary" href="https://github.com/prathammukewar/dyslexaid">View the source</a>
+        </div>
+      </div>
+      <img src="img/popup.png" alt="The DyslexAid popup: a preview sentence, four quick-start presets, and a list of switches for each feature" width="700" height="559">
+    </div>
+  </header>
+
+  <section>
+    <div class="wrap">
+      <h2>What it does</h2>
+      <div class="grid">
+        <div class="card"><h3>Friendly font</h3><p>Swaps the page to OpenDyslexic, whose heavy letter bottoms keep b, d, p, and q from flipping.</p></div>
+        <div class="card"><h3>Bold word starts</h3><p>Bolds the first part of each word so your eye jumps from anchor to anchor. Works on endless feeds too.</p></div>
+        <div class="card"><h3>Comfy spacing</h3><p>Taller lines, shorter paragraphs, left-aligned text, and lines capped at a readable length.</p></div>
+        <div class="card"><h3>Reading ruler</h3><p>A soft bar follows your mouse, or your keyboard, so you never lose your line.</p></div>
+        <div class="card"><h3>Line focus</h3><p>Dims everything except the band you are reading. The ruler's stronger sibling.</p></div>
+        <div class="card"><h3>Calm mode</h3><p>Freezes animations and moving parts. For ADHD, migraines, and motion sickness.</p></div>
+        <div class="card"><h3>Read aloud</h3><p>Reads your selection or the whole article using the voice already in your browser.</p></div>
+        <div class="card"><h3>Tint</h3><p>Cream, blue, yellow, or green over a glaring white page. Dark pages are left alone.</p></div>
+        <div class="card"><h3>And more</h3><p>Hide images, underline links, zoom text to 160%, pause it on one site, and keyboard shortcuts for all of it.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Before and after</h2>
+      <img class="shot" src="img/before-after.png" alt="The same article twice: plain on the left, and on the right with the friendly font, wider spacing, bolded word starts, a cream tint, and a reading ruler" width="1200" height="700">
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Who it's for</h2>
+      <div class="who">
+        <div class="card"><h3>Dyslexia</h3><p>The Dyslexia preset turns on the font, spacing, bold word starts, and a tint in one click. Adjust the amount and color in settings.</p></div>
+        <div class="card"><h3>ADHD</h3><p>The Focus preset stills the page: ruler on, animations off, images faded until you hover.</p></div>
+        <div class="card"><h3>Low vision</h3><p>Bigger text, wider spacing, underlined links, and the ruler. The popup itself was measured against WCAG AA.</p></div>
+        <div class="card"><h3>Anyone tired of glare</h3><p>A cream tint and a calmer page are easier on everyone at 11pm.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Private by design</h2>
+      <p class="note">DyslexAid has no analytics, makes no network requests, and needs no account. Your settings stay in your own Chrome profile. Read aloud uses the speech engine on your computer, so text is never sent anywhere. <a href="https://github.com/prathammukewar/dyslexaid/blob/main/PRIVACY.md">Full privacy policy</a>.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Install</h2>
+      <p>The Chrome Web Store listing is on its way. Until then, install it in about a minute:</p>
+      <ol>
+        <li><a href="https://github.com/prathammukewar/dyslexaid/releases/latest">Download the latest zip</a> and unzip it.</li>
+        <li>Open <code>chrome://extensions</code> and turn on Developer mode (top right).</li>
+        <li>Click Load unpacked and choose the unzipped folder.</li>
+        <li>A welcome page opens. Pick a preset and you are done.</li>
+      </ol>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <a href="https://github.com/prathammukewar/dyslexaid">GitHub</a>
+      <a href="https://github.com/prathammukewar/dyslexaid/issues">Report a problem</a>
+      <a href="https://github.com/prathammukewar/dyslexaid/blob/main/PRIVACY.md">Privacy</a>
+      <span>MIT licensed. Built by Pratham Mukewar.</span>
+    </div>
+  </footer>
+</body>
+</html>

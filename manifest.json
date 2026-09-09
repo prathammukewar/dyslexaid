@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "DyslexAid: Reading Assistant",
-  "description": "Make any page easier to read: friendly fonts, comfy spacing, bionic reading, a reading ruler, warm tint, and calm mode.",
-  "version": "1.4.0",
+  "description": "Make any page easier to read: a dyslexia-friendly font, comfy spacing, bold word starts, a reading ruler, tints, calm mode, and read aloud.",
+  "version": "1.5.0",
   "permissions": [
     "storage",
     "activeTab",
@@ -49,7 +49,7 @@
       "suggested_key": {
         "default": "Alt+Shift+B"
       },
-      "description": "Toggle bionic reading"
+      "description": "Toggle bold word starts"
     },
     "read-aloud": {
       "suggested_key": {

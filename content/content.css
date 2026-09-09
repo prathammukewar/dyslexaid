@@ -50,7 +50,7 @@ html[data-dyslexaid-spacing="on"] body li {
   text-align: left !important;  /* justified text creates rivers of whitespace */
 }
 
-/* ---------- 3. Bionic reading ---------- */
+/* ---------- 3. Bold word starts ---------- */
 /* The JS wraps the first part of each word in <b class="dyslexaid-bionic">.
    Kept subtle: bold but not black. */
 b.dyslexaid-bionic {

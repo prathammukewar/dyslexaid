@@ -1,70 +1,93 @@
 # DyslexAid: Reading Assistant
 
-A Chrome extension that makes any web page easier to read for people with
-dyslexia, ADHD, low vision, or motion sensitivity. Click the toolbar icon and
-flip on any mix of:
+A free Chrome extension that makes any web page easier to read for people
+with dyslexia, ADHD, low vision, or motion sensitivity. One click gives you
+a dyslexia-friendly font, bold word starts, a reading ruler, a calmer page,
+or a voice that reads the page to you. It collects nothing and never connects
+to the internet.
+
+Website: https://prathammukewar.github.io/dyslexaid/
+
+<img src="docs/img/popup.png" alt="The DyslexAid popup with a preview sentence, four quick-start presets, and switches for each feature" width="700">
+
+## Features
 
 | Feature | What it does |
 |---|---|
 | **Friendly font** | Swaps in [OpenDyslexic](https://opendyslexic.org), whose weighted letter-bottoms resist flipping, and widens letter and word spacing |
-| **Comfy spacing** | Raises line height, adds paragraph breathing room, and caps line length around 70 characters |
-| **Bionic reading** | Bolds the first ~40% of every word so the eye anchors and glides. Works on infinite-scroll feeds too |
-| **Reading ruler** | Puts a soft highlight band under your cursor so you never lose your line |
-| **Warm tint** | Turns the background cream and adds gentle sepia to cut white-screen glare |
+| **Comfy spacing** | Raises line height, adds paragraph breathing room, left-aligns text, and caps line length around 70 characters |
+| **Bold word starts** | Bolds the first part of every word (30, 40, or 50%) so the eye anchors and glides, a technique sometimes sold as bionic reading. Works on infinite-scroll feeds too |
+| **Reading ruler** | A soft highlight band follows your cursor, or moves with Alt+Up and Alt+Down, so you never lose your line |
+| **Line focus** | Dims the whole page except a band around your line |
 | **Calm mode** | Freezes animations, transitions, and motion on the page |
+| **Hide images** | Fades pictures and embeds so text stands alone; hover brings one back |
+| **Tint** | A cream, blue, yellow, or green overlay that cuts white-screen glare. Dark pages are left alone |
+| **Underline links** | Restores underlines on sites that stripped them |
+| **Read aloud** | Speaks your selection, or the whole article, using the voice built into your browser |
 | **Text size** | Zooms the whole page from 100% to 160% |
 | **Per-site pause** | Turns everything off for one site without losing your settings |
 
 Keyboard shortcuts: **Alt+Shift+R** toggles the ruler, **Alt+Shift+B**
-toggles bionic reading, and **Alt+Shift+S** starts or stops read aloud. All
+toggles bold word starts, and **Alt+Shift+S** starts or stops read aloud. All
 three can be changed at `chrome://extensions/shortcuts`.
 
-The popup is built so you do not have to know what any of this means before
-you start. Four quick-start buttons (Dyslexia, Focus, Low vision, All off)
-turn on a sensible bundle in one click, and the one that matches your
-current toggles lights up. A preview sentence at the top changes as you flip
-switches, so you can see the font, spacing, bolding, tint, and underlines
-before you look at the page. Hover over or tab to anything and a panel in
-the corner explains what it does and who it tends to help. A badge in the
-header counts how many features are on.
+<img src="docs/img/before-after.png" alt="The same article twice: plain on the left, and on the right with the friendly font, wider spacing, bolded word starts, a cream tint, and a reading ruler" width="900">
 
-The Settings button opens a page for the finer knobs: bionic boldness, tint
-color (cream, blue, yellow, or green), ruler height, read-aloud speed, and
-the list of paused sites.
+## Built for people who do not want to read a manual
+
+The first time it installs, a welcome page opens with four presets
+(Dyslexia, Focus, Low vision, Nothing yet). Pick one and the page you are
+looking at changes, so you see the effect before you open anything else.
+
+The popup works the same way. The presets are at the top, a preview
+sentence changes as you flip switches, and hovering over or tabbing to
+anything shows a plain explanation of what it does and who it tends to
+help. A badge counts how many features are on. The Settings page has the
+finer knobs: bionic boldness, tint color, ruler height, read-aloud speed,
+paused sites, and links for reporting problems.
 
 Settings are saved with `chrome.storage.sync`, so they persist across pages,
 restarts, and your other Chrome installs.
 
-## Install (developer mode)
+## Install
 
-1. Open `chrome://extensions` in Chrome
-2. Turn on **Developer mode** (top right)
-3. Click **Load unpacked** and select this folder
-4. Pin "DyslexAid" from the puzzle-piece menu and open any article
+Until the Chrome Web Store listing is live:
 
-Try it on [demo/demo.html](demo/demo.html) (enable "Allow access to file URLs"
-on the extension card, or just use any Wikipedia article).
+1. Download the latest zip from the
+   [releases page](https://github.com/prathammukewar/dyslexaid/releases/latest)
+   and unzip it, or clone this repository
+2. Open `chrome://extensions` and turn on **Developer mode** (top right)
+3. Click **Load unpacked** and select the folder
+4. The welcome page opens; pick a preset. Pin "DyslexAid" from the
+   puzzle-piece menu so the popup is one click away
+
+There is a sample article at [demo/demo.html](demo/demo.html) with an
+animated badge, an image, and underline-less links, so every toggle has
+something to act on (enable "Allow access to file URLs" on the extension
+card, or just use any Wikipedia article).
 
 ## How it works
 
-Settings live in one place: `chrome.storage.sync`. The popup and the
-keyboard-shortcut service worker only write to it, and the content script in
-every open tab listens for changes with `chrome.storage.onChanged` and applies
-them. There is no custom message routing, and every tab stays in sync,
-including tabs that were already open.
+Settings live in one place: `chrome.storage.sync`. The popup, the welcome
+page, the settings page, and the keyboard-shortcut service worker only
+write to it, and the content script in every open tab listens for changes
+with `chrome.storage.onChanged` and applies them. There is no custom
+message routing, and every tab stays in sync, including tabs that were
+already open.
 
 Each visual feature is a CSS attribute toggle. The content script flips an
 attribute on `<html>` (for example `data-dyslexaid-font="on"`) and the
 stylesheet rules keyed to that attribute do the actual restyling, so turning a
 feature on or off costs a single DOM write.
 
-Bionic reading is the one feature that rewrites the page. A `TreeWalker`
+Bold word starts is the one feature that rewrites the page. A `TreeWalker`
 visits only text nodes, skips code blocks, form fields, and editable regions,
 and wraps the start of each word in `<b class="dyslexaid-bionic">`. A
 debounced `MutationObserver` catches content added after page load, which is
 what makes the feature work on infinite-scroll feeds and comment sections.
 When you toggle it off, the wrappers stay in the DOM and CSS renders them at
-normal weight, so turning it back on is instant.
+normal weight, so turning it back on is instant. Changing the boldness
+unwraps and rewraps them.
 
 Read aloud uses the browser's built-in speech synthesis, so the audio is
 generated on your machine and no text goes anywhere. It is also the one
@@ -74,46 +97,56 @@ shortcut sends `{type: "speak"}` to the active tab and the content script
 speaks or stops. While speech runs, a large button sits in the corner of the
 page so you can see it is on and stop it with a click.
 
+The ruler and line focus share one vertical position. The mouse moves it,
+and so do Alt+Up and Alt+Down, with the step size tied to the ruler height,
+so people who scroll with the keyboard can place the band without reaching
+for a mouse.
+
 The popup and settings page were built for the same readers as the
 features. Every text and control color was measured against WCAG AA
 (4.5:1 for text, 3:1 for controls), the toggles show a check mark so on and
 off are not told apart by color alone, everything works by keyboard with
 visible focus rings, the help panel is a live region so screen readers hear
 it, switch animations turn off when your system asks for reduced motion,
-and if you turn on the friendly font, the settings page uses it too. The
-popup itself stays in the system font, because OpenDyslexic's wide letters
-would push it past Chrome's 600px popup limit and force scrolling; the
-preview card is where you see the font instead.
+and if you turn on the friendly font, the settings and welcome pages use it
+too. The popup itself stays in the system font, because OpenDyslexic's wide
+letters would push it past Chrome's 600px popup limit and force scrolling;
+the preview card is where you see the font instead.
 
-A few smaller details: the warm tint measures the page's background luminance
-and leaves dark-themed pages alone, since sepia over near-black just looks muddy; every
-popup control can be reached with Tab and toggled with Space, with visible
-focus rings; and the extension asks for only three permissions (`storage`,
+A few smaller details: the tint measures the page's background luminance
+and leaves dark-themed pages alone, since a pale wash over near-black just
+looks muddy; and the extension asks for only three permissions (`storage`,
 `activeTab`, and `scripting`).
 
 ## Known limits
 
-The reading ruler and line focus follow the mouse only; there is no keyboard
-control for them yet. Read aloud has no per-word highlighting. Both are on
-the list.
+Read aloud has no per-word highlighting yet. Sites that build their own
+text rendering (Google Docs, some PDF viewers) are outside what a stylesheet
+can reach.
 
 ## Privacy
 
 DyslexAid collects nothing. It has no analytics and makes no network
 requests; your settings are stored in Chrome's own sync storage and never
-leave your browser.
+leave your browser. The full policy is in [PRIVACY.md](PRIVACY.md).
 
 ## Structure
 
 ```
 dyslexaid/
 ├── manifest.json        # Manifest V3 config, keyboard commands
-├── background.js        # Service worker: shortcuts write settings flips
-├── popup/               # Toolbar popup UI
+├── background.js        # Service worker: shortcuts, welcome page on install
+├── popup/               # Toolbar popup: presets, preview, help panel
+├── options/             # Settings page
+├── welcome/             # First-run page with presets and a live sample
 ├── content/
-│   ├── content.js       # Applies settings; bionic rewriter; ruler
+│   ├── content.js       # Applies settings; word-start bolding; ruler; read aloud
 │   └── content.css      # All feature styles, attribute-keyed
+├── fonts/               # OpenDyslexic (SIL OFL)
 ├── icons/
+├── docs/                # Website (GitHub Pages) and screenshots
+├── store/               # Chrome Web Store images
+├── tools/gen_assets.py  # Renders every screenshot with headless Chrome
 └── demo/demo.html       # A page to try every feature on
 ```
 
