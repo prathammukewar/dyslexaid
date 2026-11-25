@@ -6,7 +6,8 @@ a dyslexia-friendly font, bold word starts, a reading ruler, a calmer page,
 or a voice that reads the page to you. It collects nothing and never connects
 to the internet.
 
-Website: https://prathammukewar.github.io/dyslexaid/
+Try it without installing anything: https://prathammukewar.github.io/dyslexaid/
+(the sample article on that page runs this repository's content script).
 
 <img src="docs/img/popup.png" alt="The DyslexAid popup with a preview sentence, four quick-start presets, and switches for each feature" width="700">
 
@@ -115,8 +116,34 @@ the preview card is where you see the font instead.
 
 A few smaller details: the tint measures the page's background luminance
 and leaves dark-themed pages alone, since a pale wash over near-black just
-looks muddy; and the extension asks for only three permissions (`storage`,
-`activeTab`, and `scripting`).
+looks muddy; and the extension asks for `storage`, `scripting`, and access
+to the pages you open, which is the one thing a page restyler cannot do
+without.
+
+Chrome only runs a content script in pages loaded after an extension
+arrives, so on install the service worker injects it into every tab that is
+already open. Without that, the first article a new user tried it on would
+ignore them until they reloaded it. The popup makes the same check each time
+it opens: it pings the tab, injects the script if nothing answers, and if
+that fails too it says plainly that Chrome keeps this page off limits (its
+own pages, the Web Store, and new tabs).
+
+## Testing
+
+```
+node tools/smoke.mjs
+```
+
+This loads the unpacked extension into real Chrome over the DevTools
+protocol, with no dependencies, and walks the first-run flow: install with a
+tab already open, the welcome page, a preset, the popup, the ruler by
+keyboard, read aloud, a paused site, a blocked page, and the website demo.
+It prints one line per check.
+
+It exists because version 1.5.0 shipped a welcome page whose buttons did
+nothing. The pages had only ever been tried against a stand-in for
+`chrome.*` in an ordinary tab, and real Chrome rejected a duplicate
+declaration that the stand-in let through.
 
 ## Known limits
 
@@ -135,7 +162,7 @@ leave your browser. The full policy is in [PRIVACY.md](PRIVACY.md).
 ```
 dyslexaid/
 ├── manifest.json        # Manifest V3 config, keyboard commands
-├── background.js        # Service worker: shortcuts, welcome page on install
+├── background.js        # Service worker: shortcuts, first-install setup
 ├── popup/               # Toolbar popup: presets, preview, help panel
 ├── options/             # Settings page
 ├── welcome/             # First-run page with presets and a live sample
@@ -144,8 +171,10 @@ dyslexaid/
 │   └── content.css      # All feature styles, attribute-keyed
 ├── fonts/               # OpenDyslexic (SIL OFL)
 ├── icons/
-├── docs/                # Website (GitHub Pages) and screenshots
+├── docs/                # Website (GitHub Pages), its live demo in docs/try
 ├── store/               # Chrome Web Store images
+├── tools/smoke.mjs      # Real-Chrome test of the first-run flow
+├── tools/sync-site.mjs  # Copies content/ into the website demo
 ├── tools/gen_assets.py  # Renders every screenshot with headless Chrome
 └── demo/demo.html       # A page to try every feature on
 ```

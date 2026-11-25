@@ -18,11 +18,11 @@ MOCK = """<script>
 const store = %s;
 window.chrome = {
   storage: { sync: {
-    get: (k, cb) => { const r = k === null ? {...store} : typeof k === "string" ? {[k]: store[k]} : {...store}; cb && cb(r); return Promise.resolve(r); },
+    get: (k, cb) => { const r = k === null ? {...store} : typeof k === "string" ? {[k]: store[k]} : {...store}; cb && setTimeout(() => cb(r)); return Promise.resolve(r); },
     set: (o) => { Object.assign(store, o); return Promise.resolve(); },
     clear: () => Promise.resolve(),
   }, onChanged: { addListener: () => {} } },
-  tabs: { query: () => Promise.resolve([{ id: 1, url: "https://en.wikipedia.org/wiki/Dyslexia" }]), sendMessage: () => Promise.resolve(), create: () => {} },
+  tabs: { query: () => Promise.resolve([{ id: 1, url: "https://en.wikipedia.org/wiki/Dyslexia" }]), sendMessage: (id, m) => Promise.resolve(m && m.type === "ping" ? "pong" : undefined), create: () => {} },
   runtime: { openOptionsPage: () => {}, onMessage: { addListener: () => {} } },
 };
 </script>"""

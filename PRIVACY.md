@@ -1,6 +1,6 @@
 # DyslexAid privacy policy
 
-Last updated: September 9, 2026
+Last updated: November 25, 2026
 
 DyslexAid does not collect, store, transmit, or sell any personal data. There
 is nothing to opt out of because nothing is gathered.
@@ -29,10 +29,10 @@ your computer and is not sent anywhere.
 ## Permissions, and why
 
 - `storage`: saves your settings
-- `activeTab` and host access on all sites: the extension's only job is
-  restyling whatever page you are reading, so it has to run on the pages you
-  open
-- `scripting`: injects the styling script into pages
+- Access to the sites you visit: the extension's only job is restyling
+  whatever page you are reading, so it has to run on the pages you open
+- `scripting`: puts the styling script into tabs that were already open
+  when you installed it, so they work without a reload
 
 ## Changes
 

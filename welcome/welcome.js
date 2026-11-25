@@ -39,8 +39,8 @@ for (const btn of document.querySelectorAll("[data-preset]")) {
 }
 
 document.getElementById("speak").addEventListener("click", () => {
-  // readAloud comes from content.js, loaded on this page as a plain script.
-  readAloud();
+  // content.js is loaded on this page as a plain script and exposes this.
+  dyslexaid.readAloud();
 });
 document.getElementById("open-options").addEventListener("click", () => {
   chrome.runtime.openOptionsPage();

@@ -35,6 +35,27 @@ const PREVIEW_PARTS = [
 ];
 
 let host = null; // hostname of the current tab, if it's a normal web page
+let tabId = null; // the tab this popup controls
+
+/* Is the content script alive in that tab? */
+function ping(id) {
+  return chrome.tabs
+    .sendMessage(id, { type: "ping" })
+    .then((reply) => reply === "pong", () => false);
+}
+
+/* Put the content script into a tab that lacks it. Fails on pages
+   Chrome keeps off limits, which is how the popup finds out. */
+async function inject(id) {
+  try {
+    const target = { tabId: id };
+    await chrome.scripting.insertCSS({ target, files: ["content/content.css"] });
+    await chrome.scripting.executeScript({ target, files: ["content/content.js"] });
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 /* ---------- preview ----------
    Builds the sentence with each word split into a bold start and a
@@ -173,10 +194,9 @@ $("#shortcuts").addEventListener("click", () => {
 /* Read aloud happens once and is over, so there is nothing to store;
    it goes to the page as a message. Closing the popup lets the user
    watch the page. */
-$("#speak").addEventListener("click", async () => {
-  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  if (tab?.id) {
-    chrome.tabs.sendMessage(tab.id, { type: "speak" }).catch(() => {});
+$("#speak").addEventListener("click", () => {
+  if (tabId !== null) {
+    chrome.tabs.sendMessage(tabId, { type: "speak" }).catch(() => {});
   }
   window.close();
 });
@@ -188,15 +208,27 @@ $("#preview").addEventListener("click", (e) => {
 
 /* ---------- init ---------- */
 (async () => {
-  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  // The smoke test opens the popup as an ordinary tab and names the tab
+  // to control with ?tab=<id>. Normally it is the tab you are looking at.
+  const forced = new URLSearchParams(location.search).get("tab");
+  const tab = forced
+    ? await chrome.tabs.get(Number(forced))
+    : (await chrome.tabs.query({ active: true, currentWindow: true }))[0];
+  tabId = tab?.id ?? null;
+
+  let reachable = false;
   try {
     const url = new URL(tab.url);
-    if (url.protocol === "http:" || url.protocol === "https:") {
-      host = url.hostname;
+    if (/^(https?|file):$/.test(url.protocol)) {
+      reachable = (await ping(tabId)) || ((await inject(tabId)) && (await ping(tabId)));
     }
+    if (reachable && url.protocol !== "file:") host = url.hostname;
   } catch {
-    /* chrome:// pages and the like get no site row */
+    /* chrome:// pages and the like have no readable address */
   }
+  $("#blocked").hidden = reachable;
+  $("#preview").hidden = !reachable;
+
   render();
   // Keep the popup live if settings change while it's open
   // (a keyboard shortcut, a preset, or reset).

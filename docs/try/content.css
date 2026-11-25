@@ -1,0 +1,172 @@
+/* Bundled OpenDyslexic font (SIL OFL licensed, see fonts/OFL.txt).
+   Weighted letter-bottoms reduce letter flipping/mirroring. */
+@font-face {
+  font-family: "OpenDyslexic";
+  src: url("fonts/OpenDyslexic-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "OpenDyslexic";
+  src: url("fonts/OpenDyslexic-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ============================================================
+   DyslexAid page styles.
+   Every feature is keyed off an attribute on <html>, e.g.
+   <html data-dyslexaid-font="on">. The content script only
+   flips these attributes; CSS does the heavy lifting.
+   ============================================================ */
+
+/* ---------- 1. Friendly font ---------- */
+/* Rounded, distinct letterforms + wider letter/word spacing.
+   We deliberately skip icon fonts, code, and form controls so
+   we don't break site UI. */
+html[data-dyslexaid-font="on"] body,
+html[data-dyslexaid-font="on"] body :not(code):not(pre):not(kbd):not(samp):not([class*="icon"]):not([class*="fa-"]):not(i):not(input):not(textarea):not(select) {
+  font-family: "OpenDyslexic", "Comic Sans MS", "Comic Sans", Verdana, sans-serif !important;
+  letter-spacing: 0.03em !important;
+  word-spacing: 0.12em !important;
+}
+
+/* ---------- 2. Comfy spacing ---------- */
+html[data-dyslexaid-spacing="on"] body p,
+html[data-dyslexaid-spacing="on"] body li,
+html[data-dyslexaid-spacing="on"] body blockquote,
+html[data-dyslexaid-spacing="on"] body article,
+html[data-dyslexaid-spacing="on"] body section {
+  line-height: 1.9 !important;
+}
+html[data-dyslexaid-spacing="on"] body p {
+  margin-bottom: 1.2em !important;
+  max-width: 70ch;          /* long lines are hard to track back from */
+}
+html[data-dyslexaid-spacing="on"] body p,
+html[data-dyslexaid-spacing="on"] body li {
+  text-align: left !important;  /* justified text creates rivers of whitespace */
+}
+
+/* ---------- 3. Bold word starts ---------- */
+/* The JS wraps the first part of each word in <b class="dyslexaid-bionic">.
+   Kept subtle: bold but not black. */
+b.dyslexaid-bionic {
+  font-weight: 700 !important;
+  color: inherit;
+}
+/* When bionic is off, the wrappers stay in the DOM but render
+   as normal text, which makes toggling cheap. */
+html:not([data-dyslexaid-bionic="on"]) b.dyslexaid-bionic {
+  font-weight: inherit !important;
+}
+
+/* ---------- 4. Reading ruler ---------- */
+/* A fixed, full-width band that the JS moves to follow the cursor.
+   pointer-events:none so it never blocks clicks. */
+#dyslexaid-ruler {
+  position: fixed;
+  left: 0;
+  width: 100vw;
+  height: 2.4em;
+  background: rgba(255, 200, 0, 0.16);
+  border-top: 1px solid rgba(255, 170, 0, 0.45);
+  border-bottom: 1px solid rgba(255, 170, 0, 0.45);
+  pointer-events: none;
+  z-index: 2147483646;      /* above nearly everything */
+  transition: top 0.05s linear;
+  display: none;
+}
+html[data-dyslexaid-ruler="on"] #dyslexaid-ruler { display: block; }
+
+/* ---------- 5. Tint overlay ---------- */
+/* The attribute value carries the chosen color, so the content
+   script sets data-dyslexaid-tint="cream" (or blue/yellow/green)
+   and the right palette applies. Cream also gets a gentle sepia
+   filter that softens harsh pure-white images. */
+html[data-dyslexaid-tint] body :is(main, article, section, div, p):not([class*="dark"]) {
+  background-color: transparent;
+}
+html[data-dyslexaid-tint="cream"] body {
+  background-color: #faf4e3 !important;
+  filter: sepia(0.14) !important;
+}
+html[data-dyslexaid-tint="blue"] body   { background-color: #e6f0fa !important; }
+html[data-dyslexaid-tint="yellow"] body { background-color: #fdf3cf !important; }
+html[data-dyslexaid-tint="green"] body  { background-color: #e8f4e4 !important; }
+
+/* ---------- 6. Calm mode ---------- */
+/* Freezes animations, transitions, and smooth-scrolling.
+   Helps ADHD readers and people with vestibular/motion
+   sensitivity: the page holds still. */
+html[data-dyslexaid-calm="on"] *,
+html[data-dyslexaid-calm="on"] *::before,
+html[data-dyslexaid-calm="on"] *::after {
+  animation: none !important;
+  transition: none !important;
+}
+html[data-dyslexaid-calm="on"] {
+  scroll-behavior: auto !important;
+}
+
+/* ---------- 7. Line focus ---------- */
+/* A clear band that follows the cursor while the giant box-shadow
+   darkens everything around it. pointer-events:none keeps the page
+   clickable. */
+#dyslexaid-focus {
+  position: fixed;
+  left: 0;
+  width: 100vw;
+  height: 110px;
+  pointer-events: none;
+  z-index: 2147483645;
+  box-shadow: 0 0 0 200vmax rgba(24, 18, 8, 0.45);
+  transition: top 0.05s linear;
+  display: none;
+}
+html[data-dyslexaid-focus="on"] #dyslexaid-focus { display: block; }
+
+/* ---------- 8. Hide images ---------- */
+/* Fading keeps the layout intact; hovering brings one back. */
+html[data-dyslexaid-images="on"] body :is(img, picture, video, iframe, figure) {
+  opacity: 0.12 !important;
+  filter: grayscale(1);
+  transition: opacity 0.15s;
+}
+html[data-dyslexaid-images="on"] body :is(img, picture, video, iframe, figure):hover {
+  opacity: 1 !important;
+  filter: none;
+}
+
+/* ---------- 9. Underline links ---------- */
+/* Some sites strip underlines and rely on color alone, which is
+   hard on low-vision and color-blind readers. Put them back. */
+html[data-dyslexaid-links="on"] body a {
+  text-decoration: underline !important;
+  text-underline-offset: 2px;
+}
+
+/* ---------- 10. Read-aloud indicator ---------- */
+/* Fixed pill in the corner while speech runs. White on #7a3a10 is
+   8.6:1, and the size is generous on purpose. */
+#dyslexaid-speaking {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 2147483647;
+  font: 600 16px/1.2 -apple-system, "Segoe UI", system-ui, sans-serif;
+  padding: 14px 18px;
+  border-radius: 999px;
+  border: 2px solid #fff;
+  background: #7a3a10;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+}
+#dyslexaid-speaking:focus-visible {
+  outline: 3px solid #ffd9b3;
+  outline-offset: 3px;
+}
+#dyslexaid-speaking[hidden] { display: none !important; }

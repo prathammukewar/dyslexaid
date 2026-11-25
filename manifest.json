@@ -2,11 +2,13 @@
   "manifest_version": 3,
   "name": "DyslexAid: Reading Assistant",
   "description": "Make any page easier to read: a dyslexia-friendly font, comfy spacing, bold word starts, a reading ruler, tints, calm mode, and read aloud.",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "permissions": [
     "storage",
-    "activeTab",
     "scripting"
+  ],
+  "host_permissions": [
+    "<all_urls>"
   ],
   "background": {
     "service_worker": "background.js"

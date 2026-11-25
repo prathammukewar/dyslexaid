@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Sample article</title>
+  <link rel="stylesheet" href="content.css">
+  <style>
+    /* Styled like an ordinary article on purpose: a serif face, tight
+       lines, justified text, links without underlines. */
+    body { font-family: Georgia, serif; font-size: 16px; line-height: 1.3; margin: 0; padding: 22px 26px; color: #222; background: #fff; }
+    h1 { font-size: 24px; margin: 0 0 12px; border-bottom: 2px solid #ddd; padding-bottom: 8px; }
+    p { margin: 0 0 12px; text-align: justify; }
+    a { color: #0a58ca; text-decoration: none; }
+    figure { margin: 0 0 12px; }
+    img { display: block; max-width: 100%; height: auto; }
+    figcaption { font-size: 13px; color: #555; margin-top: 4px; }
+    .pulse { display: inline-block; padding: 4px 10px; background: #c62828; color: #fff; border-radius: 4px;
+             font-weight: 700; font-size: 13px; animation: pulse 1s infinite alternate; }
+    @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.12); } }
+    @media (prefers-reduced-motion: reduce) { .pulse { animation: none; } }
+  </style>
+  <script>
+    /* content.js is the extension's real content script. It expects a
+       few pieces of chrome.*, so this stands in for them: the page
+       around this frame calls applySettings() where the extension
+       would write to chrome.storage. */
+    const saved = {};
+    const watchers = [];
+    window.chrome = {
+      storage: {
+        // Answers later, never on the spot, the way the real one does.
+        sync: { get: (keys, done) => setTimeout(() => done({ ...saved })) },
+        onChanged: { addListener: (fn) => watchers.push(fn) },
+      },
+      runtime: { onMessage: { addListener: () => {} } },
+    };
+    window.applySettings = (next) => {
+      for (const key of Object.keys(saved)) delete saved[key];
+      Object.assign(saved, next);
+      for (const fn of watchers) fn();
+    };
+  </script>
+</head>
+<body>
+  <h1>Why reading on screens is hard</h1>
+  <p><span class="pulse">LIVE NOW</span> A badge like this one pulls your eye away from the sentence you were reading.</p>
+  <p>For readers with dyslexia, a wall of tightly packed text in a thin typeface can feel like an obstacle course. Letters mirror and swap, lines blur together, and by the time the eye reaches the end of a long line, finding the start of the next one is a small act of navigation. How hard this feels has nothing to do with intelligence or effort. It comes down to how the page is presented, and presentation can be changed.</p>
+  <figure>
+    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='110'%3E%3Crect width='520' height='110' fill='%23ffb347'/%3E%3Ctext x='260' y='62' text-anchor='middle' font-size='20' fill='%23fff' font-family='sans-serif'%3EA loud decorative image%3C/text%3E%3C/svg%3E" alt="A bright orange decorative banner" width="520" height="110">
+    <figcaption>Pictures compete with the text for attention.</figcaption>
+  </figure>
+  <p>Small changes make outsized differences. Wider letter spacing keeps characters from crowding. Taller line height gives each line room to breathe. Bolding the first part of every word gives the eye an anchor, so reading becomes a glide from anchor to anchor instead of a letter-by-letter decode. A warm background softens the glare that makes white screens exhausting.</p>
+  <p>Links are part of the picture too. Many sites style <a href="https://opendyslexic.org" target="_blank" rel="noopener">links without underlines</a>, leaving color as the only clue, and <a href="https://www.w3.org/WAI/" target="_blank" rel="noopener">color alone is easy to miss</a>.</p>
+  <script src="content.js"></script>
+</body>
+</html>

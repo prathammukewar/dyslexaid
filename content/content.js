@@ -10,6 +10,15 @@
    arrives as a runtime message instead.
    ============================================================ */
 
+(() => {
+/* Runs once per page. The service worker injects this file into tabs that
+   were open before the extension was installed, and the popup does the
+   same for a tab it cannot reach, so a second copy has to back out.
+   Wrapping the file also keeps its names out of the welcome page, which
+   loads it as a plain script next to its own. */
+if (globalThis.dyslexaidLoaded) return;
+globalThis.dyslexaidLoaded = true;
+
 const FEATURES = [
   "font", "spacing", "bionic", "ruler", "tint",
   "calm", "focus", "images", "links",
@@ -213,9 +222,13 @@ let bandY = null; // viewport y of the band's center; null until placed
 let bandListenersOn = false;
 
 function makeOverlay(id) {
-  const el = document.createElement("div");
-  el.id = id;
-  document.body.appendChild(el);
+  // Reuse one left behind by an earlier copy of this script, if any.
+  let el = document.getElementById(id);
+  if (!el) {
+    el = document.createElement("div");
+    el.id = id;
+    document.body.appendChild(el);
+  }
   return el;
 }
 
@@ -293,6 +306,7 @@ let queued = 0;
    shortcut. It is a real button, so it is keyboard reachable too. */
 function showSpeaking(on) {
   if (!speakingEl) {
+    document.getElementById("dyslexaid-speaking")?.remove();
     speakingEl = document.createElement("button");
     speakingEl.id = "dyslexaid-speaking";
     speakingEl.type = "button";
@@ -337,6 +351,12 @@ function readAloud() {
   }
 }
 
-chrome.runtime.onMessage.addListener((msg) => {
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.type === "speak") readAloud();
+  // The popup pings before it trusts that this page can be changed.
+  if (msg.type === "ping") sendResponse("pong");
 });
+
+// The welcome page and the website demo have a "read this aloud" button.
+globalThis.dyslexaid = { readAloud };
+})();

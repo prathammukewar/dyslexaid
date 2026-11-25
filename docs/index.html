@@ -24,6 +24,8 @@
     .btn.primary { background: #fff; color: #9a4416; }
     .btn.secondary { border: 2px solid rgba(255,255,255,0.8); color: #fff; }
     .btn:hover { filter: brightness(0.95); }
+    header .source { font-size: 15px; margin: 16px 0 0; }
+    header .source a { color: #fff; }
     .hero img { width: 100%; height: auto; border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.35); }
     .brand { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
     .brand img { width: 52px; height: 52px; }
@@ -41,9 +43,22 @@
     code { background: #fff0d6; padding: 2px 6px; border-radius: 5px; font-size: 0.95em; }
     footer { padding: 30px 0 48px; color: #5c5346; font-size: 16px; border-top: 1px solid #e3d3b3; }
     footer a { margin-right: 18px; }
+    .lede { margin: -8px 0 22px; color: #5c5346; max-width: 640px; }
+    .try { display: grid; grid-template-columns: 310px 1fr; gap: 22px; align-items: start; }
+    .try h3 { font-size: 15px; margin: 0 0 8px; color: #5c5346; }
+    .try-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+    .try button { font: inherit; font-size: 15px; font-weight: 600; padding: 8px 12px; border: 2px solid #8c8170; border-radius: 9px; background: #fff; color: #2b2b2b; cursor: pointer; }
+    .try button:hover { background: #fff0d6; border-color: #9a4416; }
+    .try button[aria-pressed="true"] { background: #b84a18; border-color: #b84a18; color: #fff; }
+    .try button[aria-pressed="true"]::before { content: "\2713\00a0"; }
+    .try .try-speak { background: #b84a18; border-color: #b84a18; color: #fff; }
+    .try .try-speak:hover { background: #963a15; border-color: #963a15; }
+    .try button:focus-visible { outline: 3px solid #9a4416; outline-offset: 3px; }
+    .hint { font-size: 14.5px; color: #5c5346; margin: 12px 0 0; }
+    #try-frame { width: 100%; height: 480px; border: 1px solid #e3d3b3; border-radius: 12px; background: #fff; box-shadow: 0 6px 24px rgba(0,0,0,0.12); }
     .note { background: #fff; border: 1px solid #e3d3b3; border-radius: 12px; padding: 18px 20px; }
     @media (max-width: 760px) {
-      .hero, .who { grid-template-columns: 1fr; }
+      .hero, .who, .try { grid-template-columns: 1fr; }
       .grid { grid-template-columns: 1fr 1fr; }
       header h1 { font-size: 34px; }
     }
@@ -61,13 +76,47 @@
         <p class="tag">A free Chrome extension for dyslexia, ADHD, and low vision.</p>
         <p>One click gives you a dyslexia-friendly font, bold word starts, a reading ruler, a calmer page, or a voice that reads it to you. Nothing leaves your browser.</p>
         <div class="buttons">
-          <a class="btn primary" href="https://github.com/prathammukewar/dyslexaid/releases/latest">Download for Chrome</a>
-          <a class="btn secondary" href="https://github.com/prathammukewar/dyslexaid">View the source</a>
+          <a class="btn primary" href="#try">Try it right here</a>
+          <a class="btn secondary" href="https://github.com/prathammukewar/dyslexaid/releases/latest">Download for Chrome</a>
         </div>
+        <p class="source">Free and open source. <a href="https://github.com/prathammukewar/dyslexaid">Read the code on GitHub.</a></p>
       </div>
       <img src="img/popup.png" alt="The DyslexAid popup: a preview sentence, four quick-start presets, and a list of switches for each feature" width="700" height="559">
     </div>
   </header>
+
+  <section id="try">
+    <div class="wrap">
+      <h2>Try it right here</h2>
+      <p class="lede">The article below is running the extension's real code. Flip anything and watch it change. There is nothing to install.</p>
+      <div class="try">
+        <div class="try-controls">
+          <h3 id="try-presets">Start with a preset</h3>
+          <div class="try-row" role="group" aria-labelledby="try-presets">
+            <button data-try="dyslexia" aria-pressed="false">Dyslexia</button>
+            <button data-try="focus" aria-pressed="false">Focus</button>
+            <button data-try="vision" aria-pressed="false">Low vision</button>
+            <button data-try="off" aria-pressed="true">All off</button>
+          </div>
+          <h3 id="try-switches">Or one thing at a time</h3>
+          <div class="try-row" role="group" aria-labelledby="try-switches">
+            <button data-feature="font" aria-pressed="false">Friendly font</button>
+            <button data-feature="spacing" aria-pressed="false">Comfy spacing</button>
+            <button data-feature="bionic" aria-pressed="false">Bold word starts</button>
+            <button data-feature="ruler" aria-pressed="false">Reading ruler</button>
+            <button data-feature="focus" aria-pressed="false">Line focus</button>
+            <button data-feature="tint" aria-pressed="false">Tint</button>
+            <button data-feature="calm" aria-pressed="false">Calm mode</button>
+            <button data-feature="images" aria-pressed="false">Hide images</button>
+            <button data-feature="links" aria-pressed="false">Underline links</button>
+          </div>
+          <button id="try-speak" class="try-speak">Read it aloud</button>
+          <p class="hint">Move your mouse over the article to use the ruler and line focus.</p>
+        </div>
+        <iframe id="try-frame" src="try/frame.html" title="A sample article with DyslexAid applied"></iframe>
+      </div>
+    </div>
+  </section>
 
   <section>
     <div class="wrap">
@@ -133,5 +182,57 @@
       <span>MIT licensed. Built by Pratham Mukewar.</span>
     </div>
   </footer>
+  <script>
+    /* The demo frame runs the extension's own content script. This page
+       only keeps the settings and hands them over, the way the popup
+       does through chrome.storage. Add ?preset=dyslexia (or focus, or
+       vision) to the address to open the page with one already on. */
+    const FEATURES = ["font", "spacing", "bionic", "ruler", "focus", "tint", "calm", "images", "links"];
+    const PRESETS = {
+      dyslexia: { on: ["font", "spacing", "bionic", "tint"], textZoom: 100 },
+      focus: { on: ["ruler", "calm", "images"], textZoom: 100 },
+      vision: { on: ["spacing", "links", "ruler"], textZoom: 130 },
+      off: { on: [], textZoom: 100 },
+    };
+    const state = { textZoom: 100 };
+    for (const f of FEATURES) state[f] = false;
+    const frame = document.getElementById("try-frame");
+
+    function push() {
+      frame.contentWindow.applySettings?.({ ...state });
+      for (const b of document.querySelectorAll("[data-feature]")) {
+        b.setAttribute("aria-pressed", String(state[b.dataset.feature]));
+      }
+      for (const b of document.querySelectorAll("[data-try]")) {
+        const preset = PRESETS[b.dataset.try];
+        const matches =
+          FEATURES.every((f) => state[f] === preset.on.includes(f)) &&
+          state.textZoom === preset.textZoom;
+        b.setAttribute("aria-pressed", String(matches));
+      }
+    }
+    function usePreset(name) {
+      for (const f of FEATURES) state[f] = PRESETS[name].on.includes(f);
+      state.textZoom = PRESETS[name].textZoom;
+      push();
+    }
+    for (const b of document.querySelectorAll("[data-try]")) {
+      b.addEventListener("click", () => usePreset(b.dataset.try));
+    }
+    for (const b of document.querySelectorAll("[data-feature]")) {
+      b.addEventListener("click", () => {
+        state[b.dataset.feature] = !state[b.dataset.feature];
+        push();
+      });
+    }
+    document.getElementById("try-speak").addEventListener("click", () => {
+      frame.contentWindow.dyslexaid?.readAloud();
+    });
+
+    const wanted = new URLSearchParams(location.search).get("preset");
+    const start = () => (PRESETS[wanted] ? usePreset(wanted) : push());
+    frame.addEventListener("load", start);
+    if (frame.contentWindow.applySettings) start();
+  </script>
 </body>
 </html>
